@@ -1,1 +1,10 @@
-{}
+{
+  "auth": {
+    "test200914017f8e28": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
