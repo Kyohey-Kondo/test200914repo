@@ -4,24 +4,25 @@ import { API } from 'aws-amplify';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { listTodos, getTodo } from './graphql/queries';
 import { createTodo as createTodoMutation, deleteTodo as deleteTodoMutation } from './graphql/mutations';
-import { InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Button, Card, Nav, Col, Row, Navbar, NavDropdown } from 'react-bootstrap';
 import ReactDOM from 'react-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const initialFormState = { name: '', description: '' }
 
-function AppTitle() {
-  const title = <h1>カスタムテキスト</h1>;
-  ReactDOM.render(title, document.getElementById('title'));
-}
+// function AppTitle() {
+//   const title = <h1>カスタムテキスト</h1>;
+//   ReactDOM.render(title, document.getElementById('title'));
+// }
 
 // function SelectedQuestion() {
 //   const title = <h1>カスタムテキスト</h1>;
 //   ReactDOM.render(title, document.getElementById('selectedQuestion'));
 // }
 
-function App0(props) {
-  return <p>{props.tasks.join(', ')}</p>;
-}
+// function App0(props) {
+//   return <p>{props.tasks.join(', ')}</p>;
+// }
 
 const text = <p>hello</p>;
 ReactDOM.render(text, document.getElementById('inputText'));
@@ -32,12 +33,12 @@ ReactDOM.render(text, document.getElementById('inputText'));
 function App() {
   const [notes, setTodos] = useState([])
   const [notesAll, setAll] = useState([])
-  const [contElm, setElm] = useState([])
+  // const [contElm, setElm] = useState([])
   const [formData, setFormData] = useState(initialFormState);
 
 
   useEffect((eventList) => {
-    AppTitle()
+    // AppTitle()
     const qID = ['q002','q003'] // questionIDを指定
     var type = 'all';
     fetchTodos(qID, type); //クエリ処理
@@ -138,8 +139,32 @@ function App() {
 }
 
   return (
-
     <div className="App">
+
+    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
+      <Navbar.Brand href="index">React-Bootstrap</Navbar.Brand>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+      <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link href="pases/selectQuestions.html">問題集を作成する</Nav.Link>
+          <Nav.Link href="#pricing">Pricing</Nav.Link>
+          <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
+            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+        <Nav>
+          <Nav.Link href="#deets">More deets</Nav.Link>
+          <Nav.Link eventKey={2} href="#memes">
+            Dank memes
+          </Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
+
     <p>問題を選んで作成ボタンを押すと問題集が作成されます</p>
 
     {/*
@@ -168,10 +193,39 @@ function App() {
                 </InputGroup.Prepend>
               </InputGroup>
 */}
-              <div>
+              {/*}<div>
               <button onClick={() => eventClick(note.id)}>{note.name}</button>
               <button onClick={() => eventClick(note.id)}>{note.id}</button>
-              </div>
+              </div>*/}
+
+              <Row>
+              <Col>
+              <Card style={{marginTop: '20px'}}>
+                <Card.Header>
+                  <Nav variant="pills" defaultActiveKey="#first">
+                    <Nav.Item>
+                      <Nav.Link href="#first" onClick={() => eventClick(note.id)}> 選択する</Nav.Link>
+                    </Nav.Item>
+                    {/*<Nav.Item>
+                      <Nav.Link href="#link">Link</Nav.Link>
+                    </Nav.Item>*/}
+                    <Nav.Item>
+                      <Nav.Link href="#" >
+                        {note.id}
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </Card.Header>
+                <Card.Body>
+                  {/*<Card.Title>Special title treatment</Card.Title>*/}
+                  <Card.Text>
+                    {note.name}
+                  </Card.Text>
+                  {/*<Button variant="primary" onClick={() => eventClick(note.id)}>Go somewhere</Button>*/}
+                </Card.Body>
+              </Card>
+              </Col>
+              </Row>
 
             </div>
           ))
@@ -192,10 +246,10 @@ function App() {
         }
       </div>
       <AmplifySignOut />
-      <Square />
     </div>
   );
 }
+
 
 
 class Square extends React.Component {
