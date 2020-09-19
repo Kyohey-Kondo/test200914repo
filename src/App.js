@@ -4,30 +4,15 @@ import { API } from 'aws-amplify';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { listTodos, getTodo } from './graphql/queries';
 import { createTodo as createTodoMutation, deleteTodo as deleteTodoMutation } from './graphql/mutations';
-import { Button, Card, Nav, Col, Row, Navbar, NavDropdown } from 'react-bootstrap';
+import { Button, Card, Nav, Col, Row, Navbar, NavDropdown} from 'react-bootstrap';
 import ReactDOM from 'react-dom';
+// import Link from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const initialFormState = { name: '', description: '' }
 
-// function AppTitle() {
-//   const title = <h1>カスタムテキスト</h1>;
-//   ReactDOM.render(title, document.getElementById('title'));
-// }
-
-// function SelectedQuestion() {
-//   const title = <h1>カスタムテキスト</h1>;
-//   ReactDOM.render(title, document.getElementById('selectedQuestion'));
-// }
-
-// function App0(props) {
-//   return <p>{props.tasks.join(', ')}</p>;
-// }
-
 const text = <p>hello</p>;
 ReactDOM.render(text, document.getElementById('inputText'));
-
-
 
 
 function App() {
@@ -36,12 +21,23 @@ function App() {
   // const [contElm, setElm] = useState([])
   const [formData, setFormData] = useState(initialFormState);
 
-
   useEffect((eventList) => {
-    // AppTitle()
-    const qID = ['q002','q003'] // questionIDを指定
+    // 単元を一意のIDで管理し、対応させる
+    var idList = []
+    var ctgr = 'm1'
+    var ctgrSub = 'B'
+    var ctgrSubSub = 'a'
+    for (let i = 0; i < 5; i++){
+      idList.push(ctgr + '_' + ctgrSub + '_' + ctgrSubSub + '_' + (i+1))
+    }
+    // const qID = ['q001','q002','q003','q004','q005','q006','q007','q008','q009','q010'] // 因数分解
+    var qID = ['q001','q002','q003','q004','q005','q006','q007','q008','q009','q010'] // 二次関数
+    qID = idList
+    console.log(qID)
+    console.log(idList)
     var type = 'all';
     fetchTodos(qID, type); //クエリ処理
+    console.log(notes)
     // QuestionList(eventList)
     ReactDOM.render(eventList, document.getElementById('inputText'));
     console.log('hey')
@@ -58,8 +54,17 @@ function App() {
     // console.log(setTodos)
     if (type == 'all') {
       // all
-      const apiData = await API.graphql({ query: listTodos });
-      setAll(apiData.data.listTodos.items);
+      // const apiData = await API.graphql({ query: listTodos });
+      // setAll(apiData.data.listTodos.items);
+
+      var contentListsPre = []
+      for (let i = 0; i < qID.length; i++){
+        const apiData = await API.graphql({ query: getTodo, variables: {id: qID[i]} });
+        contentListsPre.push(apiData.data.getTodo)
+      }
+      setAll(contentListsPre)
+
+
     } else {
       // part
       var contentListsPre = []
@@ -104,7 +109,7 @@ function App() {
       }
     }
     var text = listString + ' が選択されました'
-    ReactDOM.render(text, document.getElementById('selectedQuestion'));
+    ReactDOM.render(text, document.getElementById('sub'));
   }
 
 
@@ -142,11 +147,11 @@ function App() {
     <div className="App">
 
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
-      <Navbar.Brand href="index">React-Bootstrap</Navbar.Brand>
+      <Navbar.Brand href="/" to='/'>React-Bootstrap</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link href="pases/selectQuestions.html">問題集を作成する</Nav.Link>
+          <Nav.Link href="pages/selectQuestions">問題集を作成する</Nav.Link>
           <Nav.Link href="#pricing">Pricing</Nav.Link>
           <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -186,53 +191,32 @@ function App() {
         {
           notesAll.map(note => (
             <div key={note.id || note.name}>
-
-{/*              <InputGroup className="mb-3">
-                <InputGroup.Prepend>
-                  <InputGroup.Checkbox aria-label="" />
-                </InputGroup.Prepend>
-              </InputGroup>
-*/}
-              {/*}<div>
-              <button onClick={() => eventClick(note.id)}>{note.name}</button>
-              <button onClick={() => eventClick(note.id)}>{note.id}</button>
-              </div>*/}
-
-              <Row>
-              <Col>
-              <Card style={{marginTop: '20px'}}>
+            <Col>
+              <Card style={{marginTop: '20px', marginLeft: '20px', marginRight: '20px'}}>
                 <Card.Header>
                   <Nav variant="pills" defaultActiveKey="#first">
-                    <Nav.Item>
-                      <Nav.Link href="#first" onClick={() => eventClick(note.id)}> 選択する</Nav.Link>
-                    </Nav.Item>
-                    {/*<Nav.Item>
-                      <Nav.Link href="#link">Link</Nav.Link>
-                    </Nav.Item>*/}
-                    <Nav.Item>
-                      <Nav.Link href="#" >
+                    <Nav.Item style={{marginLeft: 'auto'}}>
+                      <Nav.Link href="#" style={{fontSize: "10px", marginTop: "0px", marginBottom: "0px", paddingTop: '0px', paddingBottom: '0px', marginLeft: 'auto'}}>
                         {note.id}
                       </Nav.Link>
                     </Nav.Item>
                   </Nav>
                 </Card.Header>
-                <Card.Body>
+                <Card.Body onClick={() => eventClick(note.id)}>
                   {/*<Card.Title>Special title treatment</Card.Title>*/}
-                  <Card.Text>
+                  <Card.Text style={{fontSize: "15px", textAlign: 'left'}}>
                     {note.name}
                   </Card.Text>
                   {/*<Button variant="primary" onClick={() => eventClick(note.id)}>Go somewhere</Button>*/}
                 </Card.Body>
               </Card>
               </Col>
-              </Row>
-
             </div>
           ))
         }
       </div>
 
-      <button onClick={() => createClick()}>作成</button>
+      <Button onClick={() => createClick()}>作成</Button>
 
       <div>---------------------------------------------</div>
       <div style={{marginBottom: 30}}>
@@ -246,6 +230,9 @@ function App() {
         }
       </div>
       <AmplifySignOut />
+
+      <div id="sub" style={{fontSize: 20}}></div>
+
     </div>
   );
 }
